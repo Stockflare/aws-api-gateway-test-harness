@@ -10,6 +10,27 @@ require "base64"
 require 'pry-byebug'
 
 
+def sign_request(req, credentials)
+  # Create a AWS Style request
+  aws_req = Seahorse::Client::Http::Request.new(
+    endpoint: req.uri,
+    http_method: req.method,
+    body: req.body
+  )
+
+  # Sign the request
+  signer = Aws::Signers::V4.new(credentials, 'execute-api', ENV['AWS_REGION'])
+  signer.sign(aws_req)
+
+  # Patch in all the signing headers
+  aws_req.headers.each do |key, val|
+    puts key
+    puts val
+    req[key] = val
+  end
+
+  req
+end
 
 # Login to stockflare
 uri = URI.join("#{ENV['API_ENDPOINT']}/#{ENV['API_STAGE']}/users/login")
@@ -39,3 +60,29 @@ creds = sts.assume_role_with_web_identity({
 })
 
 puts creds.inspect
+
+# Create directory request
+uri = URI.join("#{ENV['API_ENDPOINT']}/#{ENV['API_STAGE']}/directory")
+req = Net::HTTP::Post.new(uri)
+req.body = {
+  properties: { foo: "bar" }
+
+}.to_json
+req.content_type = 'application/json'
+
+sign_request(req, creds)
+
+puts req.inspect
+
+# Call directory with signed endpoint
+dir_resp = Net::HTTP.start(uri.hostname, uri.port,
+                           use_ssl: uri.scheme == 'https') do |http|
+
+  http.request(req)
+end
+
+binding.pry
+dir = JSON.parse(dir_resp.body)
+
+binding.pry
+puts dir.inspect
