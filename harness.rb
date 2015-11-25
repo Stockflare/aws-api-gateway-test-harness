@@ -81,8 +81,4 @@ dir_resp = Net::HTTP.start(uri.hostname, uri.port,
   http.request(req)
 end
 
-binding.pry
-dir = JSON.parse(dir_resp.body)
-
-binding.pry
-puts dir.inspect
+puts dir_resp
