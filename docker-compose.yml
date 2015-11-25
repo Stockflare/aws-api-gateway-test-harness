@@ -1,0 +1,8 @@
+harness:
+  build: .
+  command: /bin/bash
+  env_file:
+    - ./.env
+  volumes:
+    - .:/stockflare
+    - ~/.aws:/root/.aws    
