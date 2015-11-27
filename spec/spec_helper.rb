@@ -1,5 +1,12 @@
 require 'pry-byebug'
 require_relative './shared/helpers'
+require 'net/http'
+require 'pathname'
+require 'fileutils'
+require 'aws-sdk'
+require 'csv'
+require "base64"
+
 
 
 Dir[Pathname(__FILE__).dirname.join('shared/*.rb').to_s].each { |f| require f }
