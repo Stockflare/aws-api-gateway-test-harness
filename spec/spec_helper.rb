@@ -6,7 +6,7 @@ require 'fileutils'
 require 'aws-sdk'
 require 'csv'
 require "base64"
-
+require 'uri'
 
 
 Dir[Pathname(__FILE__).dirname.join('shared/*.rb').to_s].each { |f| require f }

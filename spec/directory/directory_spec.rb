@@ -1,5 +1,4 @@
 require_relative '../spec_helper'
-require 'uri'
 
 describe '/directory' do
   let(:uri) { URI.join("#{ENV['API_ENDPOINT']}/#{ENV['API_STAGE']}/directory") }
@@ -13,7 +12,6 @@ describe '/directory' do
     }.to_json
     req.content_type = 'application/json'
     sign_request(req, credentials)
-    puts req.inspect
     req
   end
   describe '/post' do
@@ -52,7 +50,6 @@ describe '/directory' do
       }.to_json
       req.content_type = 'application/json'
       sign_request(req, credentials)
-      puts req.inspect
       req
     end
     it 'returns 201' do

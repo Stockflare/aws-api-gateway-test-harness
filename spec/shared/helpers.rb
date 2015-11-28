@@ -17,8 +17,6 @@ module Helpers
 
     # Patch in all the signing headers
     aws_req.headers.each do |key, val|
-      puts key
-      puts val
       req[key] = val
     end
 
@@ -40,7 +38,6 @@ module Helpers
       http.request(req)
     end
     login = JSON.parse(login_resp.body)
-    puts login.inspect
     login
   end
 
@@ -52,7 +49,6 @@ module Helpers
       web_identity_token: login['token'],
       duration_seconds: 900,
     })
-    puts creds.inspect
     creds
   end
 
@@ -62,7 +58,6 @@ module Helpers
 
       http.request(request)
     end
-    puts dir_resp
     dir_resp
   end
 end
