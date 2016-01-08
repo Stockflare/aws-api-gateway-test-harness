@@ -18,7 +18,7 @@ describe '/search' do
     it 'returns 200 and Apple' do
       result = call_endpoint(uri, search_request)
       expect(result.code).to eql "200"
-      expect(JSON.parse(result.body)[0]['ric']).to eql "AAPL.O"
+      expect(JSON.parse(result.body)[0]['ric']).to eql "aapl.o"
     end
   end
 
@@ -28,7 +28,7 @@ describe '/search' do
     let(:search_request)  do
       req = Net::HTTP::Put.new(uri)
       req.body = {
-        conditions: { "ric": "AAPL.O"},
+        conditions: { "ric": "aapl.o"},
         select: [ "ric", "sic"]
 
       }.to_json
@@ -38,7 +38,7 @@ describe '/search' do
     it 'returns 200 and Apple' do
       result = call_endpoint(uri, search_request)
       expect(result.code).to eql "200"
-      expect(JSON.parse(result.body)[0]['ric']).to eql "AAPL.O"
+      expect(JSON.parse(result.body)[0]['ric']).to eql "aapl.o"
     end
   end
 
@@ -47,7 +47,7 @@ describe '/search' do
     let(:aggregate_request)  do
       req = Net::HTTP::Put.new(aggregate_uri)
       req.body = {
-        conditions: { "ric": "AAPL.O" },
+        conditions: { "ric": "aapl.o" },
         field: "price",
         type: "sum"
       }.to_json

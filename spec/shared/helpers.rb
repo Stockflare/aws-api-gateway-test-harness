@@ -19,7 +19,6 @@ module Helpers
     aws_req.headers.each do |key, val|
       req[key] = val
     end
-
     req
   end
 
@@ -58,6 +57,7 @@ module Helpers
 
       http.request(request)
     end
+    # binding.pry
     dir_resp
   end
 end
