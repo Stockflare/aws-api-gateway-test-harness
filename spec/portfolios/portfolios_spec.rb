@@ -84,17 +84,18 @@ describe '/portfolios' do
   end
 
   describe '/delete' do
+    let(:uri) { URI.join("#{ENV['API_ENDPOINT']}/#{ENV['API_STAGE']}/portfolios?id=23c1ed4d-950d-4b70-b9c4-c117ba9dcbbf") }
     let(:delete_request)  do
       req = Net::HTTP::Delete.new(uri)
-      req.body = {
-        keys: [ 'foo' ]
-      }.to_json
       req.content_type = 'application/json'
+      req.body = {
+          foo: 'bar'
+      }.to_json
       sign_request(req, credentials)
       req
     end
-    it 'returns 201' do
-      call_endpoint(uri, post_request)
+    it 'returns 200' do
+      # id = call_endpoint(uri, post_request)
       result = call_endpoint(uri, delete_request)
       expect(result.code).to eql "200"
     end
