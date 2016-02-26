@@ -1,6 +1,6 @@
 require_relative '../spec_helper'
 
-describe '/blocks' do
+describe '/trade/user' do
   let(:base_uri) { URI.join("#{ENV['API_ENDPOINT']}") }
   let(:login) { login_user(ENV['TEST_USER'], ENV['TEST_PASSWORD']) }
   let(:credentials) { get_credentials(login) }
@@ -155,8 +155,7 @@ describe '/blocks' do
 
     it 'returns logout' do
       result = call_endpoint(logout_uri, logout_request)
-      binding.pry
-      expect(result.code).to eql "201"
+      expect(result.code).to eql "200"
       expect(JSON.parse(result.body)['token']).not_to be_empty
       expect(JSON.parse(result.body)['type']).to eql 'success'
     end
