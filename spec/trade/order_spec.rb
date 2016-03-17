@@ -91,6 +91,26 @@ describe '/trade/order' do
     end
   end
 
+  describe 'PUT: /trade/order/refresh' do
+    let(:positions_uri) { URI.join(base_uri, "/#{ENV['API_STAGE']}/trade/order/positions/refresh")}
+    let(:positions_request)  do
+      req = Net::HTTP::Put.new(positions_uri)
+      req.body = {
+          token: login_result['token'],
+          account: account,
+      }.to_json
+      req.content_type = 'application/json'
+      req['X-Replay-Nonce'] = nonce_key
+      sign_request(req, credentials)
+      req
+    end
+
+    it 'returns ok' do
+      result = call_endpoint(positions_uri, positions_request)
+      expect(result.code).to eql "200"
+    end
+  end
+
   describe 'PUT: /trade/order' do
     let(:order_uri) { URI.join(base_uri, "/#{ENV['API_STAGE']}/trade/order")}
     let(:order_request)  do
