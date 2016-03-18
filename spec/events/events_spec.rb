@@ -21,7 +21,6 @@ describe '/events' do
 
     it 'returns 201' do
       result = call_endpoint(uri, post_request)
-      binding.pry
       expect(result.code).to eql "201"
       expect(JSON.parse(result.body)['type']).to eql "test"
 
