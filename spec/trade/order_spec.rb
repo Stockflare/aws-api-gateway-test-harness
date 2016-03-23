@@ -53,8 +53,7 @@ describe '/trade/order' do
       ticker: 'aapl',
       expiration: 'day',
       type: type,
-      stop_price: 0,
-      limit_price: 0
+      price: 0
     }
   end
 
@@ -68,20 +67,34 @@ describe '/trade/order' do
 
   describe 'PUT: /trade/order/positions' do
     let(:positions_uri) { URI.join(base_uri, "/#{ENV['API_STAGE']}/trade/order/positions")}
+    let(:positions_refresh_uri) { URI.join(base_uri, "/#{ENV['API_STAGE']}/trade/order/positions/refresh")}
     let(:positions_request)  do
       req = Net::HTTP::Put.new(positions_uri)
       req.body = {
           token: login_result['token'],
           account: account,
-          page: 0
+          page: 0,
+          per_page: 10
       }.to_json
       req.content_type = 'application/json'
       req['X-Replay-Nonce'] = nonce_key
       sign_request(req, credentials)
       req
     end
+    let(:positions_refresh_request)  do
+      req = Net::HTTP::Put.new(positions_uri)
+      req.body = {
+          token: login_result['token'],
+          account: account
+      }.to_json
+      req.content_type = 'application/json'
+      req['X-Replay-Nonce'] = nonce_key_2
+      sign_request(req, credentials)
+      req
+    end
 
     it 'returns positions' do
+      refresh = call_endpoint(positions_refresh_uri, positions_refresh_request)
       result = call_endpoint(positions_uri, positions_request)
       expect(result.code).to eql "200"
       expect(JSON.parse(result.body)[0]['quantity']).to be > 0

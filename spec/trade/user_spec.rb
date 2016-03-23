@@ -123,6 +123,7 @@ describe '/trade/user' do
       req.body = {
           broker: broker,
           token: login_result['token'],
+          username: username,
           answer: 'tradingticket'
       }.to_json
       req.content_type = 'application/json'
