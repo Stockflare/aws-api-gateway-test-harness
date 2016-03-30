@@ -71,7 +71,7 @@ describe '/trade/order' do
     let(:positions_request)  do
       req = Net::HTTP::Put.new(positions_uri)
       req.body = {
-          token: login_result['token'],
+          broker: broker,
           account: account,
           page: 0,
           per_page: 10
