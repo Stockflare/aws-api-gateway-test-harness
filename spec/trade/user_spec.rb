@@ -167,8 +167,7 @@ describe '/trade/user' do
     let(:logout_request)  do
       req = Net::HTTP::Delete.new(logout_uri)
       req.body = {
-          broker: broker,
-          token: login_result['token']
+          broker: broker
       }.to_json
       req.content_type = 'application/json'
       req['X-Replay-Nonce'] = nonce_key
@@ -179,7 +178,7 @@ describe '/trade/user' do
     it 'returns logout' do
       result = call_endpoint(logout_uri, logout_request)
       expect(result.code).to eql "200"
-      expect(JSON.parse(result.body)['token']).not_to be_empty
+      expect(JSON.parse(result.body)['token']).to eql nil
       expect(JSON.parse(result.body)['type']).to eql 'success'
     end
   end
