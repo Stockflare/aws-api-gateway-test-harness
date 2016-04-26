@@ -104,7 +104,7 @@ describe '/trade/order' do
     end
   end
 
-  describe 'PUT: /trade/order/refresh' do
+  describe 'PUT: /trade/order/positions/refresh' do
     let(:positions_uri) { URI.join(base_uri, "/#{ENV['API_STAGE']}/trade/order/positions/refresh")}
     let(:positions_request)  do
       req = Net::HTTP::Put.new(positions_uri)
@@ -140,6 +140,69 @@ describe '/trade/order' do
     it 'returns orders' do
       result = call_endpoint(order_uri, order_request)
       expect(result.code).to eql "200"
+    end
+  end
+
+  describe 'PUT: /trade/order/refresh' do
+    let(:order_uri) { URI.join(base_uri, "/#{ENV['API_STAGE']}/trade/order/refresh")}
+    let(:order_request)  do
+      req = Net::HTTP::Put.new(order_uri)
+      req.body = {
+          token: login_result['token'],
+          account: 'brkAcct1'
+      }.to_json
+      req.content_type = 'application/json'
+      req['X-Replay-Nonce'] = nonce_key
+      sign_request(req, credentials)
+      req
+    end
+
+    it 'returns orders' do
+      result = call_endpoint(order_uri, order_request)
+      expect(result.code).to eql "200"
+      expect(JSON.parse(result.body)[0]['uuid']).not_to be_empty
+    end
+  end
+
+  describe 'PUT: /trade/order/status' do
+    let(:order_uri) { URI.join(base_uri, "/#{ENV['API_STAGE']}/trade/order/status")}
+    let(:order_request)  do
+      req = Net::HTTP::Put.new(order_uri)
+      req.body = {
+          token: login_result['token'],
+          account: 'brkAcct1',
+          uuid: 'foobar'
+      }.to_json
+      req.content_type = 'application/json'
+      req['X-Replay-Nonce'] = nonce_key
+      sign_request(req, credentials)
+      req
+    end
+
+    it 'returns orders' do
+      result = call_endpoint(order_uri, order_request)
+      expect(result.code).to eql "403"
+    end
+  end
+
+  describe 'DELETE: /trade/order/cancel' do
+    let(:order_uri) { URI.join(base_uri, "/#{ENV['API_STAGE']}/trade/order/cancel")}
+    let(:order_request)  do
+      req = Net::HTTP::Delete.new(order_uri)
+      req.body = {
+          token: login_result['token'],
+          account: 'brkAcct1',
+          uuid: 'foobar'
+      }.to_json
+      req.content_type = 'application/json'
+      req['X-Replay-Nonce'] = nonce_key
+      sign_request(req, credentials)
+      req
+    end
+
+    it 'returns orders' do
+      result = call_endpoint(order_uri, order_request)
+      expect(result.code).to eql "403"
     end
   end
 

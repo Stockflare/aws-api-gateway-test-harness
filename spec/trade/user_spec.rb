@@ -95,6 +95,27 @@ describe '/trade/user' do
     end
   end
 
+  describe 'PUT: /trade/user/account/refresh' do
+    let(:accounts_uri) { URI.join(base_uri, "/#{ENV['API_STAGE']}/trade/user/account/refresh")}
+    let(:accounts_request)  do
+      req = Net::HTTP::Put.new(accounts_uri)
+      req.body = {
+          token: login_result['token'],
+          account: 'brkAcct1'
+      }.to_json
+      req.content_type = 'application/json'
+      req['X-Replay-Nonce'] = nonce_key
+      sign_request(req, credentials)
+      req
+    end
+
+    it 'returns accounts' do
+      result = call_endpoint(accounts_uri, accounts_request)
+      expect(result.code).to eql "200"
+      expect(JSON.parse(result.body)['id']).not_to be_empty
+    end
+  end
+
   describe 'PUT: /trade/user/links' do
     let(:links_uri) { URI.join(base_uri, "/#{ENV['API_STAGE']}/trade/user/links")}
     let(:links_request)  do
