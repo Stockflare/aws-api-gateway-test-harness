@@ -103,4 +103,25 @@ describe '/payments/stripe' do
     end
 
   end
+  describe '/payments/stripe/customer/plans' do
+    let(:endpoint) { 'stripe/customer/plans'}
+
+    describe 'PUT' do
+      let(:put_request)  do
+        req = Net::HTTP::Put.new(uri)
+        req.body = {
+          foo: 'bar'
+        }.to_json
+        req.content_type = 'application/json'
+        sign_request(req, credentials)
+        req
+      end
+
+      specify do
+        result = call_endpoint(uri, put_request)
+        expect(result.code).to eql "200"
+        expect(JSON.parse(result.body)[0]['id']).not_to be_empty
+      end
+    end
+  end
 end
