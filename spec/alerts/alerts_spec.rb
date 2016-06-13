@@ -48,5 +48,29 @@ describe '/alerts/observe' do
     end
   end
 
+  describe '/alerts/observe/observing' do
+    let(:endpoint) { 'alerts/observe/observing'}
+
+
+    describe 'PUT' do
+      let(:put_request)  do
+        req = Net::HTTP::Put.new(uri)
+        req.body = {
+          foo: 'bar'
+        }.to_json
+        req.content_type = 'application/json'
+        sign_request(req, credentials)
+        req
+      end
+
+      specify do
+        result = call_endpoint(uri, put_request)
+        pp JSON.parse(result.body)
+        expect(result.code).to eql "200"
+      end
+    end
+
+  end
+
 
 end
