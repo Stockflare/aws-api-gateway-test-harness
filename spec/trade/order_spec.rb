@@ -104,6 +104,28 @@ describe '/trade/order' do
     end
   end
 
+  describe 'PUT: /trade/order/instrument' do
+    let(:instrument_uri) { URI.join(base_uri, "/#{ENV['API_STAGE']}/trade/order/instrument")}
+    let(:instrument_request)  do
+      req = Net::HTTP::Put.new(instrument_uri)
+      req.body = {
+          broker: broker,
+          token: login_result['token'],
+          ticker: 'aapl'
+      }.to_json
+      req.content_type = 'application/json'
+      req['X-Replay-Nonce'] = nonce_key
+      sign_request(req, credentials)
+      req
+    end
+
+    it 'returns instrument' do
+      result = call_endpoint(instrument_uri, instrument_request)
+      expect(result.code).to eql "200"
+      expect(JSON.parse(result.body)['ticker']).to eql 'aapl'
+    end
+  end
+
   describe 'PUT: /trade/order/positions/refresh' do
     let(:positions_uri) { URI.join(base_uri, "/#{ENV['API_STAGE']}/trade/order/positions/refresh")}
     let(:positions_request)  do
